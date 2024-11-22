@@ -1,7 +1,7 @@
 # Spotify DBMS Project
 
 ## Project Overview
-The Spotify DBMS project is a full-stack application to manage and query data related to tracks, artists, albums, and user details. It allows both **users** and **administrators** to interact with the database through a streamlined interface and includes features like sign-up, sign-in, and advanced search functionality.
+The Spotify DBMS project is a application to manage and query data related to tracks, artists, albums, and user details. It allows both **users** and **administrators** to interact with the database through a streamlined interface and includes features like sign-up, sign-in, and advanced search functionality.
 
 ---
 
@@ -184,3 +184,18 @@ The Spotify DBMS project is a full-stack application to manage and query data re
    ```bash
    git clone <repository-url>
    cd <repository-folder>
+
+
+2. **Install Dependencies:**:
+      ```bash
+   npm install
+
+3. **Install Dependencies:**:
+      ```bash
+   node app.js
+
+4. **Access Application:**:
+      ```bash
+   Sign-Up Page: http://localhost:3000/signup
+   Sign-In Page: http://localhost:3000/signin
+   Admin Dashboard: http://localhost:3000/admin
