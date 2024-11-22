@@ -231,8 +231,11 @@ The Spotify DBMS project is a application to manage and query data related to tr
 - Include audio file storage and playback features.
 - Feel free to edit it according to your preferences or specific project needs!
 
+### Co-Author:
+- [M Govindarajan](https://github.com/Govindarajannn)
 
 ## License
 **This project is licensed under the MIT License - see the LICENSE file for details.**
 ## Just follow me and Star ⭐ my repository 
 ## Thank You!!
+
