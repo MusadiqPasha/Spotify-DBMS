@@ -180,6 +180,7 @@ The Spotify DBMS project is a application to manage and query data related to tr
 ---
 
 ## Setup Instructions
+
 1. **Clone Repository**:
    ```bash
    git clone https://github.com/MusadiqPasha/Spotify-DBMS
@@ -228,7 +229,10 @@ The Spotify DBMS project is a application to manage and query data related to tr
 - Enable user profile customization.
 - Add analytics for popular searches.
 - Include audio file storage and playback features.
- 
-Feel free to edit it according to your preferences or specific project needs!
+- Feel free to edit it according to your preferences or specific project needs!
 
 
+## License
+**This project is licensed under the MIT License - see the LICENSE file for details.**
+## Just follow me and Star ⭐ my repository 
+## Thank You!!
