@@ -204,25 +204,31 @@ The Spotify DBMS project is a application to manage and query data related to tr
 
 
 ## Frontend
+### Home Page
+![Home Page](https://github.com/MusadiqPasha/Spotify-DBMS/blob/main/Screenshot%202024-11-22%20091449.png)
+
+### Signup Page
+![Signup Page](https://github.com/MusadiqPasha/Spotify-DBMS/blob/main/Screenshot%202024-11-22%20091603.png)
 
 ### Login Page
-![Login Page](./images/login_page.png "Login Page")
+![Login Page](https://github.com/MusadiqPasha/Spotify-DBMS/blob/main/Screenshot%202024-11-22%20091622.png)
 
-### Search Page
-![Search Page](./images/search_page.png "Search Page")
+### Admin Search Page
+![Admin Search Page](https://github.com/MusadiqPasha/Spotify-DBMS/blob/main/Screenshot%202024-11-22%20091849.png)
 
-### User Profile
-![User Profile](./images/user_profile.png "User Profile")
-
-### Admin Page
-![Admin Page](./images/admin_page.png "Admin Page")
+### User Search Page
+![User Search Page](https://github.com/MusadiqPasha/Spotify-DBMS/blob/main/Screenshot%202024-11-22%20091642.png)
 
 ## Backend
-
 ### Database Schema
-![Database Schema](./images/database_schema.png "Database Schema")
+![Database Schema](https://github.com/MusadiqPasha/Spotify-DBMS/blob/main/Screenshot%202024-11-22%20094656.png)
 
-### API Endpoints
-![API Structure](./images/api_structure.png "API Structure")
+
+## Future Enhancements
+- Enable user profile customization.
+- Add analytics for popular searches.
+- Include audio file storage and playback features.
+ 
+Feel free to edit it according to your preferences or specific project needs!
 
 
