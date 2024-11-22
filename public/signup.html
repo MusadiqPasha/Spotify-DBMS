@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="icon" href="https://www.scdn.co/i/_global/favicon.png" />
+    <!-- Font Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/material-design-iconic-font@2.2.0/dist/css/material-design-iconic-font.min.css">
+    <!-- Google Font (Poppins) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Main css -->
+    <link rel="stylesheet" href="/signup.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+    <div class="main">
+        <!-- Sign up form -->
+        <section class="signup">
+            <div class="container">
+                <div class="signup-content">
+                    <div class="signup-form">
+                        <h2 class="form-title">Sign up</h2>
+                        <form id="signup-form" class="register-form">
+                            <div class="form-group">
+                                <label for="User_Name"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                                <input type="text" name="User_Name" placeholder="Your Name" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="dob"><i class="zmdi zmdi-calendar"></i></label>
+                                <input type="date" name="dob" id="dob" placeholder="Your Date of Birth" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="email"><i class="zmdi zmdi-email"></i></label>
+                                <input type="email" name="email" id="email" placeholder="Your Email" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="pass"><i class="zmdi zmdi-lock"></i></label>
+                                <input type="password" name="pass" id="pass" placeholder="Password" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="re-pass"><i class="zmdi zmdi-lock-outline"></i></label>
+                                <input type="password" name="re_pass" id="re_pass" placeholder="Repeat your password" required />
+                            </div>
+                            <div class="form-group form-button">
+                                <input type="submit" name="signup" id="signup" class="form-submit" value="Register"/>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="signup-image">
+                        <figure><img src="/assets/signup.jpg" alt="sign up image"></figure>
+                        <a href="signin.html" class="signup-image-link">I am already a member</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        document.getElementById("signup-form").addEventListener("submit", function(event) {
+            event.preventDefault();  // Prevent the form from submitting normally
+
+            const formData = new FormData(this);
+            const data = {
+                User_Name: formData.get("User_Name"),
+                dob: formData.get("dob"),
+                email: formData.get("email"),
+                pass: formData.get("pass"),
+                re_pass: formData.get("re_pass")
+            };
+
+            // Send the form data to the backend using fetch
+            fetch("/signup", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Check for errors or success messages and display a SweetAlert
+                if (data.error) {
+                    // If there's an error (e.g., passwords don't match)
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: data.error,
+                        confirmButtonText: 'Close'
+                    });
+                } else if (data.message) {
+                    // If the registration is successful
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: data.message,
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        // Redirect to the search page after successful registration
+                        window.location.href = "search.html"; 
+                    });
+                }
+            })
+            .catch(error => {
+                // Handle any errors that occur during fetch
+                console.error("Error:", error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: "An error occurred. Please try again later.",
+                    confirmButtonText: 'Close'
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

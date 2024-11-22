@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Spotify DBMS Search & Admin Panel</title>
+    <link rel="icon" href="https://www.scdn.co/i/_global/favicon.png" />
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            padding: 20px;
+        }
+        .column {
+            flex: 1;
+            padding: 20px;
+        }
+        .column:first-child {
+            background-color: #282828;
+            border-right: 2px solid #1DB954;
+        }
+        .column:last-child {
+            background-color: #121212;
+        }
+        .banner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #282828;
+            padding: 10px 20px;
+        }
+        .banner img {
+            height: 40px;
+        }
+        .banner-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        .banner-buttons a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 10px 15px;
+            background-color: #1DB954;
+            border-radius: 20px;
+            transition: background-color 0.3s;
+        }
+        .banner-buttons a:hover {
+            background-color: #1ed760;
+        }
+        .search-form {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #282828;
+            border-radius: 8px;
+        }
+        .search-input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            background-color: #121212;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .advanced-search {
+            margin-top: 20px;
+        }
+        .search-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        select {
+            padding: 10px;
+            font-size: 14px;
+            background-color: #121212;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            flex-grow: 1;
+            min-width: 150px;
+        }
+        .search-button {
+            padding: 12px 24px;
+            background-color: #1DB954;
+            color: #ffffff;
+            border: none;
+            border-radius: 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .search-button:hover {
+            background-color: #1ed760;
+        }
+        h3 {
+            margin-bottom: 15px;
+            color: #1DB954;
+        }
+        .results {
+            margin-top: 20px;
+            background-color: #282828;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .results h2 {
+            color: #1DB954;
+        }
+        .results p {
+            color: #ffffff;
+            margin: 10px 0;
+        }
+        /* Admin Panel and Modal Styling */
+        .admin-actions {
+            background-color: #282828;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .admin-actions h2 {
+            color: #1DB954;
+        }
+        .admin-actions button {
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #1DB954;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 4px;
+            width: 100%;
+            font-size: 16px;
+        }
+        .admin-actions button:hover {
+            background-color: #1ed760;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #282828;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+        }
+        .modal-content input, .modal-content textarea, .modal-content select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            color: #ffffff;
+            background-color: #121212;
+            border: none;
+            border-radius: 4px;
+        }
+        .close {
+            color: #ffffff;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover, .close:focus {
+            color: #1ed760;
+        }
+        .save-button {
+            background-color: #1DB954;
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        .save-button:hover {
+            background-color: #1ed760;
+        }
+    </style>
+</head>
+<body>
+    <div class="banner">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Spotify_logo_with_text.svg" alt="Spotify Logo" />
+        <div class="banner-buttons">
+            <a href="top25.html">Top 25</a>
+            <a href="index.html">Home</a>
+            <a href="index.html">Sign Out</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- First Column: Search -->
+        <div class="column">
+            <div class="search-form">
+                <form id="searchForm">
+                    <input type="text" class="search-input" id="songQuery" placeholder="Search for Songs" />
+                    <input type="text" class="search-input" id="artistQuery" placeholder="Search for Artists" />
+                    <input type="text" class="search-input" id="albumQuery" placeholder="Search for Albums" />
+                    <button type="submit" class="search-button">Search</button>
+                </form>
+
+                <div class="advanced-search">
+                    <h3>ADVANCED SEARCH</h3>
+                    <div class="search-options">
+                        <select id="genre">
+                            <option value="">Genre</option>
+                            <option>R&B</option>
+                            <option>Pop</option>
+                            <option>Hip-Hop</option>
+                            <option>K-Pop</option>
+                            <option>Reggaeton</option>
+                            <option>Electronic</option>
+                            <option>Folk</option>
+                            <option>Rock</option>
+                            <option>Indie</option>
+                            <option>Country</option>
+                            <option>Flamenco</option>
+                            <option>Soul</option>
+                            <option>EDM</option>
+                            <option>Dance</option>
+                            <option>Trap</option>
+                        </select>
+                        <select id="releaseYear">
+                            <option value="">Release Year</option>
+                            <option>2024</option>
+                            <option>2023</option>
+                            <option>2022</option>
+                            <option>2021</option>
+                            <option>Earlier</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Results -->
+                <div class="results" id="resultsContainer">
+                    <h2>Search Results</h2>
+                    <div id="resultsList"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Second Column: Admin Actions -->
+        <div class="column">
+            <!-- Add these buttons in the Admin Actions section -->
+            <div class="admin-actions">
+                <h2>Admin Actions</h2>
+                <button id="addTrackBtn">Add Track</button>
+                <button id="addAlbumBtn">Add Album</button>
+                <button id="addArtistBtn">Add Artist</button>
+                <button id="removeTrackBtn">Remove Track</button>
+                <button id="removeAlbumBtn">Remove Album</button>
+                <button id="removeArtistBtn">Remove Artist</button>
+                <button id="getSongCountBtn">Get Total Songs</button>
+                
+        
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Track Modal -->
+    <div id="addTrackModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeTrackModal">&times;</span>
+            <h2>Add Track</h2>
+            <form id="trackForm">
+                <input type="number" name="TrackID" placeholder="TrackID" required />
+                <input type="text" name="Title" placeholder="Title" required />
+                <input type="number" name="Album_ID" placeholder="Album_ID" required />
+                <input type="text" name="Duration" placeholder="Duration (e.g., 3:45)" required />
+                <input type="number" name="Popularity" placeholder="Popularity (0-100)" required />
+                <input type="number" name="PlayCount" placeholder="PlayCount" required />
+                <button type="submit" class="save-button">Save Track</button>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Add Album Modal -->
+    <div id="addAlbumModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeAlbumModal">&times;</span>
+            <h2>Add Album</h2>
+            <form id="albumForm">
+                <input type="number" name="Album_ID" placeholder="Album_ID" required />
+                <input type="text" name="Album_Name" placeholder="Album Name" required />
+                <input type="number" name="Artist_ID" placeholder="Artist_ID" required />
+                <input type="text" name="Genre" placeholder="Genre" required />
+                <input type="date" name="Release_Date" placeholder="Release Date" required />
+                <button type="submit" class="save-button">Save Album</button>
+            </form>
+        </div>
+    </div>    
+
+    <!-- Add Artist Modal -->
+    <div id="addArtistModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeArtistModal">&times;</span>
+            <h2>Add Artist</h2>
+            <form id="artistForm">
+                <input type="number" name="Artist_ID" placeholder="Artist_ID" required />
+                <input type="text" name="Name" placeholder="Name" required />
+                <textarea name="Bio" placeholder="Bio" rows="4" required></textarea>
+                <input type="text" name="Genre" placeholder="Genre" required />
+                <button type="submit" class="save-button">Save Artist</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Remove Track Modal -->
+<div id="removeTrackModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeRemoveTrackModal">&times;</span>
+      <h2>Remove Track</h2>
+      <form id="removeTrackForm">
+        <input type="text" id="removeTrackID" placeholder="TrackID" required />
+        <button type="submit" class="save-button">Remove</button>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Remove Album Modal -->
+  <div id="removeAlbumModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeRemoveAlbumModal">&times;</span>
+      <h2>Remove Album</h2>
+      <form id="removeAlbumForm">
+        <input type="text" id="removeAlbumID" placeholder="AlbumID" required />
+        <button type="submit" class="save-button">Remove</button>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Remove Artist Modal -->
+  <div id="removeArtistModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeRemoveArtistModal">&times;</span>
+      <h2>Remove Artist</h2>
+      <form id="removeArtistForm">
+        <input type="text" id="removeArtistID" placeholder="ArtistID" required />
+        <button type="submit" class="save-button">Remove</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Get Song Count Modal -->
+  <div id="getSongCountModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeGetSongCountModal">&times;</span>
+        <h2>Total Number of Songs</h2>
+        <form id="getSongCountForm">
+            <button type="submit" class="save-button">Get Song Count</button>
+        </form>
+        <p id="songCountDisplay"></p>
+    </div>
+</div>
+  
+    <script>
+        
+        document.getElementById('searchForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            // Get the search queries and filter options
+            const songQuery = document.getElementById('songQuery').value; // Song name search
+            const artistQuery = document.getElementById('artistQuery').value; // Artist name search
+            const albumQuery = document.getElementById('albumQuery').value; // Album name search
+            const genre = document.getElementById('genre').value; // Genre filter
+            const releaseYear = document.getElementById('releaseYear').value; // Release year filter
+
+            // Perform AJAX request to search
+            const response = await fetch('/search', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                songQuery, 
+                artistQuery, 
+                albumQuery, 
+                genre, 
+                releaseYear
+            })
+            });
+
+            const results = await response.json();
+
+            // Display the results dynamically
+            const resultsList = document.getElementById('resultsList');
+            resultsList.innerHTML = ''; // Clear previous results
+
+            if (results.length > 0) {
+            const uniqueArtists = new Set(); // Store unique artists
+            const uniqueAlbums = new Set(); // Store unique albums
+            const displayedResults = []; // Array to store display strings
+
+            results.forEach(track => {
+                const songTitle = track.Title || ''; // Fallback to empty string if undefined
+                const artistName = track.Artist || ''; // Fallback to empty string if undefined
+                const albumName = track.Album || ''; // Fallback to empty string if undefined
+
+                // Constructing the display string based on provided queries
+                let displayString = '';
+
+                // Logic for displaying results based on queries
+                if (artistQuery && artistQuery.trim() !== '' && !songQuery && !albumQuery) {
+                if (!uniqueArtists.has(artistName)) {
+                    uniqueArtists.add(artistName);
+                    displayString = `${artistName}`; // Display artist only
+                }
+                } else if (albumQuery && albumQuery.trim() !== '' && !songQuery && !artistQuery) {
+                if (!uniqueAlbums.has(albumName)) {
+                    uniqueAlbums.add(albumName);
+                    displayString = `${albumName}`; // Display album only
+                }
+                } else if (songQuery && songQuery.trim() !== '' && !artistQuery && !albumQuery) {
+                displayString = `<strong>${songTitle}</strong> by ${artistName} from the album ${albumName}`; // Display full information
+                } else if (artistQuery && albumQuery) {
+                displayString = `${artistName} - ${albumName}`; // Display artist and album
+                } else if (songQuery && albumQuery) {
+                displayString = `<strong>${songTitle}</strong> from the album ${albumName}`; // Display songs from the specified album
+                } else if (songQuery && artistQuery) {
+                displayString = `<strong>${songTitle}</strong> by ${artistName}`; // Display songs of the specified artist
+                } else if (songQuery && artistQuery && albumQuery) {
+                displayString = `<strong>${songTitle}</strong> by ${artistName} from the album ${albumName}`; // Display specific song of artist from album
+                } else {
+                displayString = `<strong>${songTitle}</strong> by ${artistName} from the album ${albumName}`; // Default display
+                }
+
+                if (displayString) {
+                displayedResults.push(displayString);
+                }
+            });
+
+            // Display distinct artists or albums
+            if (artistQuery && artistQuery.trim() !== '' && !songQuery && !albumQuery) {
+                uniqueArtists.forEach(artist => {
+                const artistElement = document.createElement('p');
+                artistElement.innerHTML = artist; // Display unique artists
+                resultsList.appendChild(artistElement);
+                });
+            } else if (albumQuery && albumQuery.trim() !== '' && !songQuery && !artistQuery) {
+                uniqueAlbums.forEach(album => {
+                const albumElement = document.createElement('p');
+                albumElement.innerHTML = album; // Display unique albums
+                resultsList.appendChild(albumElement);
+                });
+            } else {
+                // Display all other results
+                displayedResults.forEach(result => {
+                const trackElement = document.createElement('p');
+                trackElement.innerHTML = result; // Display song information
+                resultsList.appendChild(trackElement);
+                });
+            }
+            } else {
+            resultsList.innerHTML = '<p>No results found.</p>';
+            }
+        });
+
+        // Modal Functionality for Track
+        const addTrackBtn = document.getElementById('addTrackBtn');
+        const addTrackModal = document.getElementById('addTrackModal');
+        const closeTrackModal = document.getElementById('closeTrackModal');
+
+        addTrackBtn.onclick = function() {
+            addTrackModal.style.display = 'flex';
+        }
+        closeTrackModal.onclick = function() {
+            addTrackModal.style.display = 'none';
+        }
+
+        // Modal Functionality for Album
+        const addAlbumBtn = document.getElementById('addAlbumBtn');
+        const addAlbumModal = document.getElementById('addAlbumModal');
+        const closeAlbumModal = document.getElementById('closeAlbumModal');
+
+        addAlbumBtn.onclick = function() {
+            addAlbumModal.style.display = 'flex';
+        }
+        closeAlbumModal.onclick = function() {
+            addAlbumModal.style.display = 'none';
+
+        }
+        
+        // Modal Functionality for Artist
+        const addArtistBtn = document.getElementById('addArtistBtn');
+        const addArtistModal = document.getElementById('addArtistModal');
+        const closeArtistModal = document.getElementById('closeArtistModal');
+
+        addArtistBtn.onclick = function() {
+            addArtistModal.style.display = 'flex';
+        }
+        closeArtistModal.onclick = function() {
+            addArtistModal.style.display = 'none';
+        }
+
+        // Close modal if clicked outside
+        window.onclick = function(event) {
+            if (event.target === addTrackModal) {
+                addTrackModal.style.display = 'none';
+            }
+            if (event.target === addAlbumModal) {
+                addAlbumModal.style.display = 'none';
+            }
+            if (event.target === addArtistModal) {
+                addArtistModal.style.display = 'none';
+            }
+            // Add similar checks if implementing remove modals
+        }
+
+        // Handle Add Track Form Submission
+        document.getElementById('trackForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch('/addTrack', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert(result.message);
+                    addTrackModal.style.display = 'none';
+                    this.reset();
+                } else {
+                    alert(result.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while adding the track.');
+            }
+        });
+
+        // Handle Add Album Form Submission
+        document.getElementById('albumForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch('/addAlbum', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert(result.message);
+                    addAlbumModal.style.display = 'none';
+                    this.reset();
+                } else {
+                    alert(result.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while adding the album.');
+            }
+        });
+
+        // Handle Add Artist Form Submission
+        document.getElementById('artistForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch('/addArtist', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert(result.message);
+                    addArtistModal.style.display = 'none';
+                    this.reset();
+                } else {
+                    alert(result.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while adding the artist.');
+            }
+        });
+
+        // Open and close modal functions for removing items
+
+
+
+document.getElementById("removeTrackBtn").onclick = function () {
+    document.getElementById("removeTrackModal").style.display = "flex";
+};
+document.getElementById("closeRemoveTrackModal").onclick = function () {
+    document.getElementById("removeTrackModal").style.display = "none";
+};
+
+document.getElementById("removeAlbumBtn").onclick = function () {
+    document.getElementById("removeAlbumModal").style.display = "flex";
+};
+document.getElementById("closeRemoveAlbumModal").onclick = function () {
+    document.getElementById("removeAlbumModal").style.display = "none";
+};
+
+document.getElementById("removeArtistBtn").onclick = function () {
+    document.getElementById("removeArtistModal").style.display = "flex";
+};
+document.getElementById("closeRemoveArtistModal").onclick = function () {
+    document.getElementById("removeArtistModal").style.display = "none";
+};
+
+// Event listeners for remove forms
+document.getElementById('removeTrackForm').addEventListener('submit', async function (event) {
+    event.preventDefault();
+    const trackID = document.getElementById('removeTrackID').value;
+
+    const response = await fetch('/removeTrack', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ TrackID: trackID })
+    });
+
+    if (response.ok) {
+        alert('Track removed successfully.');
+        document.getElementById('removeTrackModal').style.display = 'none';
+        // Optionally refresh the track list here
+    } else {
+        alert('Error removing track.');
+    }
+});
+
+document.getElementById('removeAlbumForm').addEventListener('submit', async function (event) {
+    event.preventDefault();
+    const albumID = document.getElementById('removeAlbumID').value;
+
+    const response = await fetch('/removeAlbum', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ AlbumID: albumID })
+    });
+
+    if (response.ok) {
+        alert('Album removed successfully.');
+        document.getElementById('removeAlbumModal').style.display = 'none';
+        // Optionally refresh the album list here
+    } else {
+        alert('Error removing album.');
+    }
+});
+
+document.getElementById('removeArtistForm').addEventListener('submit', async function (event) {
+    event.preventDefault();
+    const artistID = document.getElementById('removeArtistID').value;
+
+    const response = await fetch('/removeArtist', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ArtistID: artistID })
+    });
+
+    if (response.ok) {
+        alert('Artist removed successfully.');
+        document.getElementById('removeArtistModal').style.display = 'none';
+        // Optionally refresh the artist list here
+    } else {
+        alert('Error removing artist.');
+    }
+});
+
+// Get modal and button elements
+const getSongCountModal = document.getElementById('getSongCountModal');
+        const getSongCountBtn = document.getElementById('getSongCountBtn');
+        const closeGetSongCountModal = document.getElementById('closeGetSongCountModal');
+        const songCountDisplay = document.getElementById('songCountDisplay');
+
+        // Show modal when the button is clicked
+        getSongCountBtn.addEventListener('click', function() {
+            getSongCountModal.style.display = 'flex';
+        });
+
+        // Close modal when the 'x' is clicked
+        closeGetSongCountModal.addEventListener('click', function() {
+            getSongCountModal.style.display = 'none';
+        });
+
+        // Close modal if clicked outside the content
+        window.addEventListener('click', function(event) {
+            if (event.target === getSongCountModal) {
+                getSongCountModal.style.display = 'none';
+            }
+        });
+
+        // Handle form submission and fetch song count
+        document.getElementById('getSongCountForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const response = await fetch('/getSongCount', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                songCountDisplay.textContent = 'Total number of songs: ' + data.totalSongs;
+            } else {
+                songCountDisplay.textContent = 'Error fetching song count.';
+            }
+        });
+    </script>
+</body>
+</html>

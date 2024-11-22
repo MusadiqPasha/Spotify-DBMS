@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top 25 Songs</title>
+    <link rel="icon" href="https://www.scdn.co/i/_global/favicon.png" />
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+        .banner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #282828;
+            padding: 10px 20px;
+        }
+        .banner img {
+            height: 40px;
+        }
+        .banner-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        .banner-buttons a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 10px 15px;
+            background-color: #1DB954;
+            border-radius: 20px;
+            transition: background-color 0.3s;
+        }
+        .banner-buttons a:hover {
+            background-color: #1ed760;
+        }
+        .results {
+            margin: 20px auto;
+            max-width: 800px;
+            padding: 20px;
+            background-color: #282828;
+            border-radius: 8px;
+        }
+        .results h2 {
+            color: #1DB954;
+        }
+        .results p {
+            color: #ffffff;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="banner">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Spotify_logo_with_text.svg" alt="Spotify Logo" />
+        <div class="banner-buttons">
+            <a href="index.html">Home</a>
+            <a href="index.html">Sign Out</a>
+        </div>
+    </div>
+
+    <div class="results" id="resultsContainer">
+        <h2>Top 25 Songs of 2024</h2>
+        <div id="resultsList"></div>
+    </div>
+
+    <script>
+        async function fetchTopSongs() {
+            try {
+                const response = await fetch('/top-songs'); // Adjust the endpoint as needed
+                const songs = await response.json();
+
+                const resultsList = document.getElementById('resultsList');
+                resultsList.innerHTML = ''; // Clear previous results
+
+                if (songs.length > 0) {
+                    songs.forEach(song => {
+                        console.log(song);
+                        const songElement = document.createElement('p');
+                        songElement.innerHTML = `<strong>${song.Title}</strong> (${song.Popularity})`;
+                        resultsList.appendChild(songElement);
+                    });
+                } else {
+                    resultsList.innerHTML = '<p>No results found.</p>';
+                }
+            } catch (error) {
+                console.error('Error fetching top songs:', error);
+            }
+        }
+
+        // Fetch top songs on page load
+        window.onload = fetchTopSongs;
+    </script>
+</body>
+</html>
