@@ -234,8 +234,10 @@ The Spotify DBMS project is a application to manage and query data related to tr
 ### Co-Author:
 - [M Govindarajan](https://github.com/Govindarajannn)
 
-## License
-**This project is licensed under the MIT License - see the LICENSE file for details.**
+### License
+- This project is licensed under the MIT License - see the LICENSE file for details.
+
+##
 ## Just follow me and Star ⭐ my repository 
 ## Thank You!!
 
