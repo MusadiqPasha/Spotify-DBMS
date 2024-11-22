@@ -182,8 +182,8 @@ The Spotify DBMS project is a application to manage and query data related to tr
 ## Setup Instructions
 1. **Clone Repository**:
    ```bash
-   git clone <repository-url>
-   cd <repository-folder>
+   git clone https://github.com/MusadiqPasha/Spotify-DBMS
+   cd Spotify-DBMS
 
 
 2. **Install Dependencies:**:
@@ -199,3 +199,30 @@ The Spotify DBMS project is a application to manage and query data related to tr
    Sign-Up Page: http://localhost:3000/signup
    Sign-In Page: http://localhost:3000/signin
    Admin Dashboard: http://localhost:3000/admin
+
+
+
+
+## Frontend
+
+### Login Page
+![Login Page](./images/login_page.png "Login Page")
+
+### Search Page
+![Search Page](./images/search_page.png "Search Page")
+
+### User Profile
+![User Profile](./images/user_profile.png "User Profile")
+
+### Admin Page
+![Admin Page](./images/admin_page.png "Admin Page")
+
+## Backend
+
+### Database Schema
+![Database Schema](./images/database_schema.png "Database Schema")
+
+### API Endpoints
+![API Structure](./images/api_structure.png "API Structure")
+
+
