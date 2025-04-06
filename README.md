@@ -1,5 +1,5 @@
 # Spotify DBMS Project
-
+ 
 ## Project Overview
 The Spotify DBMS project is a application to manage and query data related to tracks, artists, albums, and user details. It allows both **users** and **administrators** to interact with the database through a streamlined interface and includes features like sign-up, sign-in, and advanced search functionality.
 
