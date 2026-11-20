@@ -11,10 +11,10 @@ app.use(express.static("public"));
 
 // MySQL Connection (on port 3307)
 const db = mysql.createConnection({
-    host: "localhost",
-    user: "root",  // Replace with your MySQL username
-    port: 3307,    // MySQL port 3307
-    password: "pasha", // Replace with your MySQL password
+    host: process.env.DB_HOST || "localhost",
+    user: process.env.DB_USER || "root",
+    port: Number(process.env.DB_PORT || 3307),
+    password: process.env.DB_PASSWORD || "",
     multipleStatements: true // To allow running multiple SQL queries at once
 });
 
@@ -156,7 +156,9 @@ app.post("/signin", (req, res) => {
     const { your_name, your_pass } = req.body;
 
     // Check if it's admin login
-    if (your_name === "admin" && your_pass === "admin789456") {
+    const adminUser = process.env.ADMIN_USERNAME;
+    const adminPass = process.env.ADMIN_PASSWORD;
+    if (adminUser && adminPass && your_name === adminUser && your_pass === adminPass) {
         // Redirect to admin page if admin credentials are correct
         return res.redirect("/admin");
     }

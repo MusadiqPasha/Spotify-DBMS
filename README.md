@@ -36,7 +36,7 @@ The Spotify DBMS project is a application to manage and query data related to tr
 
 ### Admin Features
 1. **Admin Login**:
-   - Admin credentials (`admin`, `admin789456`) allow access to the **Admin Dashboard**.
+   - Admin credentials come from the `ADMIN_USERNAME` and `ADMIN_PASSWORD` environment variables (admin login is disabled if they aren't set).
 
 2. **Add Records**:
    - Add new **Artists**, **Albums**, and **Tracks** to the database.
@@ -193,6 +193,9 @@ The Spotify DBMS project is a application to manage and query data related to tr
 
 3. **Install Dependencies:**:
       ```bash
+   # set your own values first
+   export DB_USER=root DB_PASSWORD=your_mysql_password DB_PORT=3307
+   export ADMIN_USERNAME=your_admin_name ADMIN_PASSWORD=your_admin_password
    node app.js
 
 4. **Access Application:**:
